@@ -20590,6 +20590,241 @@ var _Demo = require('./Demo');
 
 var _Demo2 = _interopRequireDefault(_Demo);
 
-(0, _reactDom.render)(_react2['default'].createElement(_Demo2['default'], null), document.querySelector('#content'));
+var _resizable = require('./resizable');
 
-},{"./Demo":177,"react":175,"react-dom":3}]},{},[178]);
+var _resizable2 = _interopRequireDefault(_resizable);
+
+(0, _reactDom.render)(_react2['default'].createElement(
+       'div',
+       null,
+       _react2['default'].createElement(
+              _resizable2['default'],
+              { width: '200', height: '500', minWidth: '100', minHeight: '100', customStyle: { border: 'solid 1px #ccc' } },
+              _react2['default'].createElement(
+                     'div',
+                     null,
+                     _react2['default'].createElement(
+                            'div',
+                            null,
+                            'cc'
+                     ),
+                     'aaaああああああああ'
+              ),
+              _react2['default'].createElement(
+                     'div',
+                     null,
+                     'bb'
+              )
+       ),
+       _react2['default'].createElement(
+              _resizable2['default'],
+              { minWidth: '200', customStyle: { border: 'solid 1px #ccc' } },
+              _react2['default'].createElement(
+                     'div',
+                     null,
+                     _react2['default'].createElement(
+                            'div',
+                            null,
+                            'cc'
+                     ),
+                     'aaa'
+              ),
+              _react2['default'].createElement(
+                     'div',
+                     null,
+                     'bb'
+              )
+       )
+), document.querySelector('#content'));
+
+},{"./Demo":177,"./resizable":179,"react":175,"react-dom":3}],179:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _resizer = require('./resizer');
+
+var _resizer2 = _interopRequireDefault(_resizer);
+
+function clamp(n, min, max) {
+  var _min = min || n;
+  var _max = max || n;
+  return Math.max(Math.min(n, _max), _min);
+}
+
+var Risizable = (function (_React$Component) {
+  _inherits(Risizable, _React$Component);
+
+  function Risizable(props) {
+    _classCallCheck(this, Risizable);
+
+    _get(Object.getPrototypeOf(Risizable.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      isActive: false,
+      width: this.props.width,
+      height: this.props.height
+    };
+    window.addEventListener('mouseup', this.onMouseUp.bind(this));
+    window.addEventListener('mousemove', this.onMouseMove.bind(this));
+  }
+
+  _createClass(Risizable, [{
+    key: 'onMouseUp',
+    value: function onMouseUp() {
+      this.state.isActive = false;
+    }
+  }, {
+    key: 'onMouseDown',
+    value: function onMouseDown(axis, event) {
+      this.state.original = {
+        x: event.clientX,
+        y: event.clientY,
+        width: this.refs.resizable.clientWidth,
+        height: this.refs.resizable.clientHeight
+      };
+      this.state.isActive = true;
+      this.state.resizeAxis = axis;
+    }
+  }, {
+    key: 'onMouseMove',
+    value: function onMouseMove(event) {
+      if (!this.state.isActive) return;
+      var _state = this.state;
+      var resizeAxis = _state.resizeAxis;
+      var original = _state.original;
+      var _props = this.props;
+      var minWidth = _props.minWidth;
+      var maxWidth = _props.maxWidth;
+      var minHeight = _props.minHeight;
+      var maxHeight = _props.maxHeight;
+
+      if (resizeAxis.indexOf('x') !== -1) {
+        var newWidth = original.width + event.clientX - original.x;
+        this.state.width = clamp(newWidth, minWidth, maxWidth);
+      }
+      if (resizeAxis.indexOf('y') !== -1) {
+        var newHeight = original.height + event.clientY - original.y;
+        this.state.height = clamp(newHeight, minHeight, maxHeight);
+      }
+      this.forceUpdate();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var style = {
+        width: this.state.width + 'px',
+        height: this.state.height + 'px',
+        position: 'relative'
+      };
+      return _react2['default'].createElement(
+        'div',
+        { ref: 'resizable',
+          style: Object.assign({}, this.props.customStyle, style),
+          className: this.props.customClass },
+        this.props.children,
+        _react2['default'].createElement(_resizer2['default'], { type: 'x', onMouseDown: this.onMouseDown.bind(this, 'x') }),
+        _react2['default'].createElement(_resizer2['default'], { type: 'y', onMouseDown: this.onMouseDown.bind(this, 'y') }),
+        _react2['default'].createElement(_resizer2['default'], { type: 'xy', onMouseDown: this.onMouseDown.bind(this, 'xy') })
+      );
+    }
+  }]);
+
+  return Risizable;
+})(_react2['default'].Component);
+
+exports['default'] = Risizable;
+module.exports = exports['default'];
+
+},{"./resizer":180,"react":175}],180:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var Risizer = (function (_React$Component) {
+  _inherits(Risizer, _React$Component);
+
+  function Risizer(props) {
+    _classCallCheck(this, Risizer);
+
+    _get(Object.getPrototypeOf(Risizer.prototype), 'constructor', this).call(this, props);
+  }
+
+  _createClass(Risizer, [{
+    key: 'onMouseDown',
+    value: function onMouseDown(event) {
+      this.props.onMouseDown(event);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var style = undefined;
+      if (this.props.type === 'x') {
+        style = {
+          width: '10px',
+          height: '100%',
+          position: 'absolute',
+          top: '0',
+          right: '-5px',
+          cursor: 'col-resize'
+        };
+      } else if (this.props.type === 'y') {
+        style = {
+          width: '100%',
+          height: '10px',
+          position: 'absolute',
+          bottom: '-5px',
+          cursor: 'row-resize'
+        };
+      } else {
+        style = {
+          width: '10px',
+          height: '10px',
+          position: 'absolute',
+          right: '-5px',
+          bottom: '-5px',
+          cursor: 'nw-resize'
+        };
+      }
+      return _react2['default'].createElement('div', { style: style, onMouseDown: this.onMouseDown.bind(this) });
+    }
+  }]);
+
+  return Risizer;
+})(_react2['default'].Component);
+
+exports['default'] = Risizer;
+module.exports = exports['default'];
+
+},{"react":175}]},{},[178]);
