@@ -20409,7 +20409,15 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -20438,122 +20446,131 @@ function clamp(n, min, max) {
 var springConfig = [500, 30];
 var itemsCount = 20;
 
-var Demo = _react2['default'].createClass({
-  displayName: 'Demo',
+var Demo = (function (_React$Component) {
+  _inherits(Demo, _React$Component);
 
-  getInitialState: function getInitialState() {
-    return {
+  function Demo(props) {
+    _classCallCheck(this, Demo);
+
+    _get(Object.getPrototypeOf(Demo.prototype), 'constructor', this).call(this, props);
+    this.state = {
       delta: 0,
       mouse: 0,
       isPressed: false,
       lastPressed: 0,
       order: (0, _lodashRange2['default'])(itemsCount)
     };
-  },
-
-  componentDidMount: function componentDidMount() {
-    window.addEventListener('touchmove', this.handleTouchMove);
-    window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
-  },
-
-  handleTouchStart: function handleTouchStart(key, pressLocation, e) {
-    this.handleMouseDown(key, pressLocation, e.touches[0]);
-  },
-
-  handleTouchMove: function handleTouchMove(e) {
-    e.preventDefault();
-    this.handleMouseMove(e.touches[0]);
-  },
-
-  handleMouseDown: function handleMouseDown(pos, pressX, _ref) {
-    var pageX = _ref.pageX;
-
-    this.setState({
-      delta: pageX - pressX,
-      mouse: pressX,
-      isPressed: true,
-      lastPressed: pos
-    });
-  },
-
-  onResize: function onResize(event, _ref2) {
-    var element = _ref2.element;
-    var size = _ref2.size;
-
-    this.setState({ width: size.width, height: size.height });
-  },
-
-  handleMouseMove: function handleMouseMove(_ref3) {
-    var pageX = _ref3.pageX;
-    var _state = this.state;
-    var isPressed = _state.isPressed;
-    var delta = _state.delta;
-    var order = _state.order;
-    var lastPressed = _state.lastPressed;
-
-    if (isPressed) {
-      var mouse = pageX - delta;
-      var row = clamp(Math.round(mouse / 205), 0, itemsCount - 1);
-      var newOrder = reinsert(order, order.indexOf(lastPressed), row);
-      this.setState({ mouse: mouse, order: newOrder });
-    }
-  },
-
-  handleMouseUp: function handleMouseUp() {
-    this.setState({ isPressed: false, delta: 0 });
-  },
-
-  render: function render() {
-    var _this = this;
-
-    var _state2 = this.state;
-    var mouse = _state2.mouse;
-    var isPressed = _state2.isPressed;
-    var lastPressed = _state2.lastPressed;
-    var order = _state2.order;
-
-    return _react2['default'].createElement(
-      'div',
-      null,
-      (0, _lodashRange2['default'])(itemsCount).map(function (i) {
-        var style = lastPressed === i && isPressed ? {
-          scale: (0, _reactMotion.spring)(1.1, springConfig),
-          shadow: (0, _reactMotion.spring)(16, springConfig),
-          x: mouse
-        } : {
-          scale: (0, _reactMotion.spring)(1, springConfig),
-          shadow: (0, _reactMotion.spring)(1, springConfig),
-          x: (0, _reactMotion.spring)(order.indexOf(i) * 205, springConfig)
-        };
-        return _react2['default'].createElement(
-          _reactMotion.Motion,
-          { style: style, key: i },
-          function (_ref4) {
-            var scale = _ref4.scale;
-            var shadow = _ref4.shadow;
-            var x = _ref4.x;
-            return _react2['default'].createElement(
-              'div',
-              {
-                onMouseDown: _this.handleMouseDown.bind(null, i, x),
-                onTouchStart: _this.handleTouchStart.bind(null, i, x),
-                className: 'demo8-item',
-                style: {
-                  boxShadow: 'rgba(0, 0, 0, 0.2) 0px ' + shadow + 'px ' + 2 * shadow + 'px 0px',
-                  transform: 'translate3d(' + x + 'px, 0, 0) scale(' + scale + ')',
-                  WebkitTransform: 'translate3d(' + x + 'px, 0, 0) scale(' + scale + ')',
-                  zIndex: i === lastPressed ? 99 : i
-                } },
-              order.indexOf(i) + 1
-            );
-          }
-        );
-      })
-    );
+    window.addEventListener('touchmove', this.handleTouchMove.bind(this));
+    window.addEventListener('touchend', this.handleMouseUp.bind(this));
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    window.addEventListener('mouseup', this.handleMouseUp.bind(this));
   }
-});
+
+  _createClass(Demo, [{
+    key: 'handleTouchStart',
+    value: function handleTouchStart(key, pressLocation, e) {
+      this.handleMouseDown(key, pressLocation, e.touches[0]);
+    }
+  }, {
+    key: 'handleTouchMove',
+    value: function handleTouchMove(e) {
+      e.preventDefault();
+      this.handleMouseMove(e.touches[0]);
+    }
+  }, {
+    key: 'handleMouseDown',
+    value: function handleMouseDown(pos, pressX, _ref) {
+      var pageX = _ref.pageX;
+
+      this.state.delta = pageX - pressX;
+      this.state.mouse = pressX;
+      this.state.isPressed = true;
+      this.state.lastPressed = pos;
+    }
+  }, {
+    key: 'onResize',
+    value: function onResize(event, _ref2) {
+      var element = _ref2.element;
+      var size = _ref2.size;
+
+      this.setState({ width: size.width, height: size.height });
+    }
+  }, {
+    key: 'handleMouseMove',
+    value: function handleMouseMove(_ref3) {
+      var pageX = _ref3.pageX;
+      var _state = this.state;
+      var isPressed = _state.isPressed;
+      var delta = _state.delta;
+      var order = _state.order;
+      var lastPressed = _state.lastPressed;
+
+      if (isPressed) {
+        var mouse = pageX - delta;
+        var row = clamp(Math.round(mouse / 205), 0, itemsCount - 1);
+        var newOrder = reinsert(order, order.indexOf(lastPressed), row);
+        this.setState({ mouse: mouse, order: newOrder });
+      }
+    }
+  }, {
+    key: 'handleMouseUp',
+    value: function handleMouseUp() {
+      this.setState({ isPressed: false, delta: 0 });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this = this;
+
+      var _state2 = this.state;
+      var mouse = _state2.mouse;
+      var isPressed = _state2.isPressed;
+      var lastPressed = _state2.lastPressed;
+      var order = _state2.order;
+
+      return _react2['default'].createElement(
+        'div',
+        null,
+        (0, _lodashRange2['default'])(itemsCount).map(function (i) {
+          var style = lastPressed === i && isPressed ? {
+            scale: (0, _reactMotion.spring)(1.1, springConfig),
+            shadow: (0, _reactMotion.spring)(16, springConfig),
+            x: mouse
+          } : {
+            scale: (0, _reactMotion.spring)(1, springConfig),
+            shadow: (0, _reactMotion.spring)(1, springConfig),
+            x: (0, _reactMotion.spring)(order.indexOf(i) * 205, springConfig)
+          };
+          return _react2['default'].createElement(
+            _reactMotion.Motion,
+            { style: style, key: i },
+            function (_ref4) {
+              var scale = _ref4.scale;
+              var shadow = _ref4.shadow;
+              var x = _ref4.x;
+              return _react2['default'].createElement(
+                'div',
+                {
+                  onMouseDown: _this.handleMouseDown.bind(_this, i, x),
+                  onTouchStart: _this.handleTouchStart.bind(_this, i, x),
+                  className: 'demo8-item',
+                  style: {
+                    boxShadow: 'rgba(0, 0, 0, 0.2) 0px ' + shadow + 'px ' + 2 * shadow + 'px 0px',
+                    transform: 'translate3d(' + x + 'px, 0, 0) scale(' + scale + ')',
+                    WebkitTransform: 'translate3d(' + x + 'px, 0, 0) scale(' + scale + ')',
+                    zIndex: i === lastPressed ? 99 : i
+                  } },
+                order.indexOf(i) + 1
+              );
+            }
+          );
+        })
+      );
+    }
+  }]);
+
+  return Demo;
+})(_react2['default'].Component);
 
 exports['default'] = Demo;
 module.exports = exports['default'];

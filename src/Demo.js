@@ -18,45 +18,41 @@ function clamp(n, min, max) {
 const springConfig = [500, 30];
 const itemsCount = 20;
 
-const Demo = React.createClass({
-  getInitialState() {
-    return {
+export default class Demo extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       delta: 0,
       mouse: 0,
       isPressed: false,
       lastPressed: 0,
       order: range(itemsCount)
     };
-  },
-
-  componentDidMount() {
-    window.addEventListener('touchmove', this.handleTouchMove);
-    window.addEventListener('touchend', this.handleMouseUp);
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
-  },
+    window.addEventListener('touchmove', this.handleTouchMove.bind(this));
+    window.addEventListener('touchend', this.handleMouseUp.bind(this));
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    window.addEventListener('mouseup', this.handleMouseUp.bind(this));
+  }
 
   handleTouchStart(key, pressLocation, e) {
     this.handleMouseDown(key, pressLocation, e.touches[0]);
-  },
+  }
 
   handleTouchMove(e) {
     e.preventDefault();
     this.handleMouseMove(e.touches[0]);
-  },
+  }
 
   handleMouseDown(pos, pressX, {pageX}) {
-    this.setState({
-      delta: pageX - pressX,
-      mouse: pressX,
-      isPressed: true,
-      lastPressed: pos,
-    });
-  },
+    this.state.delta = pageX - pressX;
+    this.state.mouse = pressX;
+    this.state.isPressed = true;
+    this.state.lastPressed =  pos;
+  }
 
   onResize(event, {element, size}) {
     this.setState({width: size.width, height: size.height});
-  },
+  }
 
   handleMouseMove({pageX}) {
     const {isPressed, delta, order, lastPressed} = this.state;
@@ -66,15 +62,14 @@ const Demo = React.createClass({
       const newOrder = reinsert(order, order.indexOf(lastPressed), row);
       this.setState({mouse: mouse, order: newOrder});
     }
-  },
+  }
 
   handleMouseUp() {
     this.setState({isPressed: false, delta: 0});
-  },
+  }
 
   render() {
     const {mouse, isPressed, lastPressed, order} = this.state;
-
     return (
       <div>
         {range(itemsCount).map(i => {
@@ -93,8 +88,8 @@ const Demo = React.createClass({
             <Motion style={style} key={i}>
               {({scale, shadow, x}) =>
                   <div
-                    onMouseDown={this.handleMouseDown.bind(null, i, x)}
-                    onTouchStart={this.handleTouchStart.bind(null, i, x)}
+                    onMouseDown={this.handleMouseDown.bind(this, i, x)}
+                    onTouchStart={this.handleTouchStart.bind(this, i, x)}
                     className="demo8-item"
                     style={{
                       boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
@@ -111,7 +106,5 @@ const Demo = React.createClass({
         })}
       </div>
     );
-  },
-});
-
-export default Demo;
+  }
+}
