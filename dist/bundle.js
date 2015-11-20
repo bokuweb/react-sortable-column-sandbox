@@ -32801,7 +32801,9 @@ function reinsert(arr, from, to) {
 }
 
 function clamp(n, min, max) {
-  return Math.max(Math.min(n, max), min);
+  var _min = min || n;
+  var _max = max || n;
+  return Math.max(Math.min(n, _max), _min);
 }
 
 var springConfig = [500, 30];
@@ -33037,9 +33039,7 @@ var _resizer = require('./resizer');
 var _resizer2 = _interopRequireDefault(_resizer);
 
 function clamp(n, min, max) {
-  var _min = min || n;
-  var _max = max || n;
-  return Math.max(Math.min(n, _max), _min);
+  return Math.max(Math.min(n, max), min);
 }
 
 var Risizable = (function (_Component) {
@@ -33102,11 +33102,15 @@ var Risizable = (function (_Component) {
 
       if (resizeAxis.indexOf('x') !== -1) {
         var newWidth = original.width + event.clientX - original.x;
-        this.state.width = clamp(newWidth, minWidth, maxWidth);
+        var min = minWidth < 0 || minWidth === undefined ? 0 : minWidth;
+        var max = maxWidth < 0 || maxWidth === undefined ? newWidth : minWidth;
+        this.state.width = clamp(newWidth, min, max);
       }
       if (resizeAxis.indexOf('y') !== -1) {
         var newHeight = original.height + event.clientY - original.y;
-        this.state.height = clamp(newHeight, minHeight, maxHeight);
+        var min = minHeight < 0 || minHeight === undefined ? 0 : minHeight;
+        var max = maxHeight < 0 || maxHeight === undefined ? newHeight : minHeight;
+        this.state.height = clamp(newHeight, min, max);
       }
       this.props.onChange(event, this.state.width, this.state.height);
       this.forceUpdate();

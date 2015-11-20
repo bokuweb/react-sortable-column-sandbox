@@ -13,7 +13,9 @@ function reinsert(arr, from, to) {
 }
 
 function clamp(n, min, max) {
-  return Math.max(Math.min(n, max), min);
+  const _min = min || n;
+  const _max = max || n;
+  return Math.max(Math.min(n, _max), _min);
 }
 
 const springConfig = [500, 30];
