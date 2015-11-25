@@ -132,6 +132,7 @@ export default class Demo extends Component{
             <Motion style={style} key={i}>
               {({scale, shadow, x}) =>
                <Resizable customClass="demo8-item" onChange={this.onChange.bind(this, order.indexOf(i))}
+               canResize={{x:true, y:false, xy:false}}
                customStyle={{
                       boxShadow: `rgba(0, 0, 0, 0.2) 0px ${shadow}px ${2 * shadow}px 0px`,
                       transform: `translate3d(${x}px, 0, 0) scale(${scale})`,

@@ -32966,6 +32966,7 @@ var Demo = (function (_Component) {
               return _react2['default'].createElement(
                 _resizable2['default'],
                 { customClass: 'demo8-item', onChange: _this.onChange.bind(_this, order.indexOf(i)),
+                  canResize: { x: true, y: false, xy: false },
                   customStyle: {
                     boxShadow: 'rgba(0, 0, 0, 0.2) 0px ' + shadow + 'px ' + 2 * shadow + 'px 0px',
                     transform: 'translate3d(' + x + 'px, 0, 0) scale(' + scale + ')',
